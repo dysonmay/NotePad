@@ -1,9 +1,9 @@
 # NotePad应用介绍
 ## 基础功能
-## 时间戳功能
+### 时间戳功能
     应用增加了一个时间戳功能，保存并显示用户最后更新编辑备忘录时间，在主界面显示备忘录时按时间戳降序排序
 （1）数据库设计部分主要修改了NotePadProvider.java类，在在 notes 表中设计了 modified 列（COLUMN_NAME_MODIFICATION_DATE）
-## 扩展功能
+
 ```java
         sNotesProjectionMap.put(
                 NotePad.Notes.COLUMN_NAME_MODIFICATION_DATE,
@@ -88,6 +88,7 @@ public static final String DEFAULT_SORT_ORDER = "modified DESC";
   <img src="运行结果截图/修改标题.png" width="30%" style="margin: 10px;">
   <img src="运行结果截图/修改标题之后更新时间戳.png" width="30%" style="margin: 10px;">
 </div>
+
 ### 查询功能
     查询支持对标题和内容的模糊查询，并且可以与标签筛选结合使用。
 
