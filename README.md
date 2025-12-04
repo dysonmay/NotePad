@@ -1,6 +1,10 @@
 # NotePad应用介绍
+## 基础功能
 
-# 小组件
+
+## 扩展功能
+### 小组件功能
+    应用提供了一个桌面小组件，可以显示笔记的总数和最新笔记的内容。点击小组件可以快速打开应用主界面或创建新笔记。
 （1）NotePadAppWidget.java类说小组件的提供者，继承自AppWidgetProvider，负责更新小组件的界面和响应小组件的更新请求。
 在onUpdate方法中遍历所有需要更新的小组件ID，对每一个调用updateAppWidget方法。
 ```java
@@ -118,8 +122,9 @@ getContext().getContentResolver().notifyChange(uri, null);
             return;
         }
     }
-
 ```
+![小组件功能预览](运行结果截图/小组件截图.png)
+
 ```
 
 ```
