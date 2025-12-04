@@ -195,8 +195,9 @@ private void refreshNoteList() {
     mAdapter.changeCursor(cursor); // 更新适配器
 }
 ```
-![搜索功能预览](运行结果截图/修改标题之后更新时间戳.png)
+![搜索功能预览](运行结果截图/动态搜索以及按内容搜索.png)
 
+## 扩展功能
 ```java
 
 ```
