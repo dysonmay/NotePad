@@ -196,7 +196,9 @@ private void refreshNoteList() {
     mAdapter.changeCursor(cursor); // 更新适配器
 }
 ```
-![搜索功能预览](运行结果截图/动态搜索以及按内容搜索.png)
+下图是标题和文本搜索功能预览
+![标题搜索功能预览](运行结果截图/进行标签搜索.png)
+![文本内容搜索功能预览](运行结果截图/动态搜索以及按内容搜索.png)
 
 ## 扩展功能
 
@@ -461,17 +463,3 @@ getContext().getContentResolver().notifyChange(uri, null);
     }
 ```
 ![小组件功能预览](运行结果截图/小组件截图.png)
-
-```
-
-```
-
-```
-
-```
-
-```
-
-```
-
-```
