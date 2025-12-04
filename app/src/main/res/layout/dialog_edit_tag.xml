@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/et_tag_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="标签名称"
+        android:layout_marginBottom="16dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="16dp">
+
+        <View
+            android:id="@+id/color_preview"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginEnd="12dp"
+            android:background="#2196F3" />
+
+        <!-- 修改：选择颜色按钮 -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_pick_color"
+            style="@style/Widget.NotePad.Button.Text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="选择颜色" />
+
+    </LinearLayout>
+
+</LinearLayout>

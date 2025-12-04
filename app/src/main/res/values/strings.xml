@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2007 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<resources>
+    <string name="app_name">NotePad</string>
+    <string name="live_folder_name">Notes</string>
+
+    <string name="title_edit_title">Note title:</string>
+    <string name="title_create">New note</string>
+    <string name="title_edit">Edit: %1$s</string>
+    <string name="title_notes_list">Notes</string>
+
+    <string name="menu_add">New note</string>
+    <string name="menu_save">Save</string>
+    <string name="menu_delete">Delete</string>
+    <string name="menu_open">Open</string>
+    <string name="menu_revert">Revert changes</string>
+    <string name="menu_copy">Copy</string>
+    <string name="menu_paste">Paste</string>
+    <string name="menu_search">Search</string>
+    <string name="search_hint">Enter the title</string>
+    <string name="no_search_results">No matching memo was found</string>
+<!--    <string name="nothing_to_save">There is nothing to save</string>-->
+
+    <string name="button_ok">OK</string>
+    <string name="text_title">Title:</string>
+
+    <string name="resolve_edit">Edit note</string>
+    <string name="resolve_title">Edit title</string>
+
+    <string name="error_title">Error</string>
+    <string name="error_message">Error loading note</string>
+    <string name="nothing_to_save">There is nothing to save</string>
+
+    <string name="menu_tag">标签</string>
+    <string name="tag_all">全部</string>
+    <string name="tag_none">无标签</string>
+    <string name="tag_add">添加标签</string>
+    <string name="tag_edit">编辑标签</string>
+    <string name="tag_delete">删除标签</string>
+    <string name="tag_filter">标签筛选</string>
+    <string name="tag_manage">管理标签</string>
+    <string name="tag_name_hint">标签名称</string>
+    <string name="tag_color">颜色</string>
+    <string name="tag_select">选择标签</string>
+    <string name="tag_create">创建标签</string>
+    <string name="tag_created_success">标签创建成功</string>
+    <string name="tag_deleted_success">标签删除成功</string>
+    <string name="tag_updated_success">标签更新成功</string>
+    <string name="tag_confirm_delete">确定要删除这个标签吗？</string>
+    <string name="filter_by_tag">按标签筛选</string>
+    <string name="cancel">取消</string>
+    <string name="tag_filter_prefix">标签：</string>
+    <string name="all_notes">所有笔记</string>
+
+    <string name="widget_title">笔记</string>
+    <string name="widget_note_count">笔记: %d</string>
+    <string name="widget_latest_note">最新笔记: %s</string>
+    <string name="widget_new_note">新建笔记</string>
+
+</resources>

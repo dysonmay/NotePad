@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.android.notepad">
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <application
+        android:icon="@drawable/app_notes"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme">
+
+        <!-- 原有的provider -->
+        <provider
+            android:name="NotePadProvider"
+            android:authorities="com.example.android.notepad.provider"
+            android:exported="true"
+            android:grantUriPermissions="true">
+            <grant-uri-permission android:pathPattern=".*" />
+        </provider>
+
+        <!-- 原有的provider重复声明，只保留一个 -->
+
+        <!-- 添加Widget Provider -->
+        <receiver android:name=".NotePadAppWidget"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/note_pad_widget_info" />
+        </receiver>
+
+        <!-- Widget配置Activity（可选） -->
+        <activity android:name=".NotePadWidgetConfigureActivity"
+            android:theme="@style/AppTheme.Dialog"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".NotesList"
+            android:label="@string/title_notes_list"
+            android:exported="true"
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.EDIT" />
+                <action android:name="android.intent.action.PICK" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="vnd.android.cursor.dir/vnd.google.note" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.GET_CONTENT" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="vnd.android.cursor.item/vnd.google.note" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".NoteEditor"
+            android:theme="@style/AppTheme"
+            android:screenOrientation="sensor"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="true">
+            <intent-filter android:label="@string/resolve_edit">
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.EDIT" />
+                <action android:name="com.android.notepad.action.EDIT_NOTE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="vnd.android.cursor.item/vnd.google.note" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.INSERT" />
+                <action android:name="android.intent.action.PASTE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="vnd.android.cursor.dir/vnd.google.note" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name="NotesLiveFolder"
+            android:label="@string/live_folder_name"
+            android:icon="@drawable/live_folder_notes"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.CREATE_LIVE_FOLDER" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+    </application>
+
+</manifest>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 主题颜色配置 -->
+    <string-array name="theme_colors">
+        <item>#2196F3</item> <!-- 蓝色 -->
+        <item>#4CAF50</item> <!-- 绿色 -->
+        <item>#FF5722</item> <!-- 橙色 -->
+        <item>#9C27B0</item> <!-- 紫色 -->
+        <item>#00BCD4</item> <!-- 青色 -->
+        <item>#FF9800</item> <!-- 琥珀色 -->
+    </string-array>
+
+    <string-array name="theme_names">
+        <item>蓝色主题</item>
+        <item>绿色主题</item>
+        <item>橙色主题</item>
+        <item>紫色主题</item>
+        <item>青色主题</item>
+        <item>琥珀色主题</item>
+    </string-array>
+
+    <!-- 扩展颜色定义 -->
+    <color name="colorPrimary_green">#4CAF50</color>
+    <color name="colorPrimaryDark_green">#388E3C</color>
+    <color name="colorAccent_green">#8BC34A</color>
+
+    <color name="colorPrimary_orange">#FF5722</color>
+    <color name="colorPrimaryDark_orange">#D84315</color>
+    <color name="colorAccent_orange">#FF9800</color>
+
+    <color name="colorPrimary_purple">#9C27B0</color>
+    <color name="colorPrimaryDark_purple">#7B1FA2</color>
+    <color name="colorAccent_purple">#E040FB</color>
+
+    <color name="colorPrimary_cyan">#00BCD4</color>
+    <color name="colorPrimaryDark_cyan">#0097A7</color>
+    <color name="colorAccent_cyan">#18FFFF</color>
+
+    <color name="colorPrimary_amber">#FF9800</color>
+    <color name="colorPrimaryDark_amber">#F57C00</color>
+    <color name="colorAccent_amber">#FFD740</color>
+</resources>

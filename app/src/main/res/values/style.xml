@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 应用主主题（动态） -->
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
+        <item name="colorPrimary">@color/colorPrimary_dynamic</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark_dynamic</item>
+        <item name="colorAccent">@color/colorAccent_dynamic</item>
+        <item name="android:windowBackground">@color/background</item>
+        <item name="android:textColorPrimary">@color/text_primary</item>
+
+        <!-- 确保 ActionBar 相关属性正确设置 -->
+        <item name="windowActionBar">true</item>
+        <item name="windowNoTitle">false</item>
+
+        <!-- 添加这些以确保菜单项正确显示 -->
+        <item name="actionBarStyle">@style/MyActionBar</item>
+        <item name="actionMenuTextColor">@color/text_primary</item>
+    </style>
+
+    <style name="MyActionBar" parent="Widget.AppCompat.Light.ActionBar.Solid">
+        <item name="titleTextStyle">@style/MyTitleTextStyle</item>
+        <item name="background">@color/colorPrimary_dynamic</item>
+    </style>
+
+    <style name="MyTitleTextStyle" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <!-- 使用 AppCompat 对话框主题而不是 MaterialComponents -->
+    <style name="AppTheme.Dialog" parent="Theme.MaterialComponents.Light.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        <item name="android:windowSoftInputMode">stateVisible|adjustResize</item>
+    </style>
+
+    <!-- 按钮属性 -->
+    <style name="Widget.NotePad.Button" parent="Widget.MaterialComponents.Button">
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:paddingRight">8dp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:minWidth">0dp</item>  <!-- 移除默认最小宽度 -->
+        <item name="backgroundTint">@color/colorPrimary_dynamic</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="Widget.NotePad.Button.Text" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:textColor">@color/text_secondary</item>
+    </style>
+</resources>

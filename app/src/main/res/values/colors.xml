@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 主题颜色变量（动态设置） -->
+    <color name="colorPrimary_dynamic">#2196F3</color>
+    <color name="colorPrimaryDark_dynamic">#1976D2</color>
+    <color name="colorAccent_dynamic">#FF4081</color>
+
+    <!-- 静态颜色定义（用于引用） -->
+    <color name="colorPrimary">#2196F3</color>
+    <color name="colorPrimaryDark">#1976D2</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <!-- 原有颜色保持不变 -->
+    <color name="background">#F5F5F5</color>
+    <color name="editor_background">#FFFDE7</color>
+    <color name="list_item_background">#FFFFFF</color>
+
+    <!-- 文字颜色 -->
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#757575</color>
+    <color name="editor_text">#37474F</color>
+    <color name="hint_text">#BDBDBD</color>
+
+    <!-- 线条和边框 -->
+    <color name="divider">#E0E0E0</color>
+    <color name="editor_line">#FFD54F</color>
+    <color name="border">#BDBDBD</color>
+</resources>
