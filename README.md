@@ -199,17 +199,134 @@ private void refreshNoteList() {
 ![搜索功能预览](运行结果截图/动态搜索以及按内容搜索.png)
 
 ## 扩展功能
+
+### 界面美化
+    支持动态切换多套配色方案，提升用户体验。
+（1）ThemeManager.java类负责管理主题相关的操作，包括获取当前主题、设置主题、获取主题颜色等。
 ```java
+// 主题颜色数组定义（主色，深色，强调色）
+private static final int[][] THEME_COLORS = {
+    {0xFF2196F3, 0xFF1976D2, 0xFFFF4081}, // 蓝色主题
+    {0xFF4CAF50, 0xFF388E3C, 0xFF8BC34A}, // 绿色主题
+    {0xFFFF5722, 0xFFD84315, 0xFFFF9800}, // 橙色主题
+    // ... 更多主题
+};
 
+// 应用主题到Activity
+public static void applyTheme(AppCompatActivity activity) {
+    int themeIndex = getCurrentThemeIndex(activity);
+    int colorPrimary = THEME_COLORS[themeIndex][0];
+    int colorPrimaryDark = THEME_COLORS[themeIndex][1];
+    int colorAccent = THEME_COLORS[themeIndex][2];
+    
+    // 设置状态栏颜色
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        Window window = activity.getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.setStatusBarColor(colorPrimaryDark);
+    }
+    
+    // 设置ActionBar/Toolbar颜色
+    if (activity.getSupportActionBar() != null) {
+        activity.getSupportActionBar().setBackgroundDrawable(
+            new ColorDrawable(colorPrimary));
+    }
+}
 ```
-
+（2）ThemeSelectionDialog.java类是一个DialogFragment，用于让用户选择主题，ThemeAdapter.java是一个RecyclerView.Adapter，用于在对话框中显示主题列表。
+ThemeSelectionDialog.java主题选择对话框
 ```java
-
+public class ThemeSelectionDialog extends DialogFragment {
+    private ThemeAdapter adapter;
+    private OnThemeChangeListener listener;
+    
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        // 获取当前主题索引
+        selectedIndex = ThemeManager.getCurrentThemeIndex(context);
+        
+        // 设置RecyclerView显示主题列表
+        RecyclerView recyclerView = view.findViewById(R.id.rv_themes);
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        
+        adapter = new ThemeAdapter(context, selectedIndex);
+        adapter.setOnThemeSelectedListener(position -> {
+            selectedIndex = position;
+            adapter.setSelectedIndex(position);
+        });
+        
+        // 确定按钮点击事件
+        btnOk.setOnClickListener(v -> {
+            ThemeManager.setThemeIndex(context, selectedIndex);
+            if (listener != null) {
+                listener.onThemeChanged(selectedIndex);
+            }
+            dismiss();
+        });
+    }
+}
 ```
-
+(3)NotesList.java中应用主列表界面的主题
 ```java
+@Override
+protected void onCreate(Bundle savedInstanceState) {
+    // 首先应用主题，然后调用父类的onCreate
+    applyTheme();
+    super.onCreate(savedInstanceState);
+    
+    // ... 其他初始化代码
+}
 
+private void applyTheme() {
+    ThemeManager.applyTheme(this);
+}
+
+private void showThemeSelectionDialog() {
+    themeDialog = new ThemeSelectionDialog();
+    themeDialog.setOnThemeChangeListener(themeIndex -> {
+        // 重启Activity以应用新主题
+        recreate();
+    });
+    themeDialog.show(getSupportFragmentManager(), "theme_dialog");
+}
 ```
+(4)NoteEditor.java中编辑器应用主题界面
+```java
+@Override
+protected void onCreate(Bundle savedInstanceState) {
+    ThemeManager.applyTheme(this);  // 应用主题
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.note_editor);
+    
+    // ... 其他初始化代码
+}
+
+// 带行号的EditText，根据主题颜色绘制线条
+public static class LinedEditText extends AppCompatEditText {
+    @Override
+    protected void onDraw(Canvas canvas) {
+        // 更新线条颜色，确保使用当前主题
+        mPaint.setColor(ThemeManager.getThemeColor(mContext, 0));
+        
+        // 绘制线条逻辑
+        for (int i = 0; i < count; i++) {
+            canvas.drawLine(r.left, baseline + 4, r.right, baseline + 4, paint);
+        }
+        super.onDraw(canvas);
+    }
+    
+    public void updateLineColor() {
+        mPaint.setColor(ThemeManager.getThemeColor(mContext, 0));
+        invalidate();
+    }
+}
+```
+![主题选择](运行结果截图/主题选择.png)
+![主题切换](运行结果截图/切换蓝色主题.png)
+
+
+### 标签功能
 
 ```java
 
