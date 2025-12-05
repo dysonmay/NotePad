@@ -330,18 +330,230 @@ public static class LinedEditText extends AppCompatEditText {
 
 
 ### 标签功能
+    实现了完整的标签管理系统，允许用户为笔记添加标签、按标签筛选、管理标签（增删改）等。
+在NotePadProvider.java中修改数据库
+```java
+db.execSQL("CREATE TABLE " + NotePad.Notes.TABLE_NAME_TAGS + " ("
+                    + "_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                    + NotePad.Notes.COLUMN_NAME_TAG_NAME + " TEXT NOT NULL,"  //标签名称
+                    + NotePad.Notes.COLUMN_NAME_TAG_COLOR + " INTEGER DEFAULT " + DEFAULT_TAG_COLOR + "," //标签颜色
+                    + "created_date INTEGER"  //创建时间戳
+                    + ");");
+)
+```
+笔记表中新增标签相关字段
+```java
+try {
+                    // 添加标签相关列 
+                    db.execSQL("ALTER TABLE " + NotePad.Notes.TABLE_NAME +
+                            " ADD COLUMN " + NotePad.Notes.COLUMN_NAME_TAG_ID + " INTEGER DEFAULT 0");
+                } catch (SQLException e) {
+                    Log.w(TAG, "添加tag_id列时出错，可能已经存在: " + e.getMessage());
+                }
+```
+（2）在NotesList.java中处理主界面标签显示逻辑
+```java
+mAdapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
+    @Override
+    public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+        // 处理标签颜色和文本显示
+    }
+});
+```
+（3）TagSelectionDialog.java标签选择对话框，显示所有可用标签的网格视图，允许创建新标签，提供颜色选择器。
+```java
+// 加载所有标签
+private void loadTags() {
+    Cursor cursor = requireContext().getContentResolver().query(
+        NotePad.Notes.TAGS_CONTENT_URI,
+        new String[]{"_id", "name", "color", "created_date"},
+        null, null, "created_date ASC"
+    );
+    // ...
+}
 
+// 创建新标签
+private void createNewTag() {
+    ContentValues values = new ContentValues();
+    values.put(NotePad.Notes.COLUMN_NAME_TAG_NAME, tagName);
+    values.put(NotePad.Notes.COLUMN_NAME_TAG_COLOR, selectedColor);
+    values.put("created_date", System.currentTimeMillis());
+    
+    Uri newTagUri = requireContext().getContentResolver().insert(
+        NotePad.Notes.TAGS_CONTENT_URI,
+        values
+    );
+    // ...
+}
+```
+具体标签界面图片、主界面标签预览如下所示：
+<div align="center">
+  <img src="运行结果截图/选择标签.png" width="30%" style="margin: 10px;">
+  <img src="运行结果截图/主界面显示标签.png" width="30%" style="margin: 10px;">
+</div>
+
+创建标签展示：
+<div align="center">
+  <img src="运行结果截图/创建标签.png" width="30%" style="margin: 10px;">
+  <img src="运行结果截图/标签创建成功.png" width="30%" style="margin: 10px;">
+</div>
+（4）ManageTagsDialog.java标签管理对话框，显示标签列表、编辑标签、删除标签（同时清理关联的笔记）、添加新标签。具体功能如下图所示：
+![标签编辑界面预览](运行结果截图/标签编辑界面.png)
+（5）在NoteEditor中修改笔记编辑界面，
+```java
+// 更新标签按钮显示
+private void updateTagButton() {
+    if (mTagId > 0) {
+        mTagButton.setText(mTagName);
+        mTagButton.setBackgroundColor(mTagColor);
+        mTagButton.setTextColor(getContrastColor(mTagColor));
+    } else {
+        mTagButton.setText(getString(R.string.tag_none));
+        mTagButton.setBackgroundColor(0xFFE0E0E0);
+        mTagButton.setTextColor(Color.BLACK);
+    }
+}
+
+// 显示标签选择对话框
+private void showTagSelectionDialog() {
+    TagSelectionDialog dialog = TagSelectionDialog.newInstance(mTagId);
+    dialog.setOnTagSelectedListener(new TagSelectionDialog.OnTagSelectedListener() {
+        @Override
+        public void onTagSelected(long tagId, String tagName, int tagColor) {
+            mTagId = tagId;
+            mTagName = tagName;
+            mTagColor = tagColor;
+            updateTagButton();
+            updateNoteWithTag(); // 保存到数据库
+        }
+        // ...
+    });
+}
+```
+![Editor界面标签预览](运行结果截图/delete删除备忘录.png)
+
+（6）按照标签查找备忘录的功能主要在 NotesList.java中实现，主要方法showTagFilterDialog()
 ```java
 
+private void showTagFilterDialog() {
+    androidx.appcompat.app.AlertDialog.Builder builder =
+            new androidx.appcompat.app.AlertDialog.Builder(this);
+    builder.setTitle(R.string.tag_filter);
+    
+    // 加载所有标签
+    final List<Tag> tags = new ArrayList<>();
+    Cursor cursor = getContentResolver().query(
+            NotePad.Notes.TAGS_CONTENT_URI,
+            new String[]{"_id", "name", "color"},
+            null,
+            null,
+            "name ASC"
+    );
+    
+    // 添加"全部"选项
+    Tag allTag = new Tag();
+    allTag.setId(-1);
+    allTag.setName(getString(R.string.all_notes));
+    tags.add(0, allTag);
+    
+    // 添加"无标签"选项
+    Tag noTag = new Tag();
+    noTag.setId(0);
+    noTag.setName(getString(R.string.tag_none));
+    tags.add(1, noTag);
+    
+    // 显示标签列表供用户选择
+    String[] tagNames = new String[tags.size()];
+    for (int i = 0; i < tags.size(); i++) {
+        tagNames[i] = tags.get(i).getName();
+    }
+    
+    int selectedIndex = 0;
+    for (int i = 0; i < tags.size(); i++) {
+        if (tags.get(i).getId() == mCurrentFilterTagId) {
+            selectedIndex = i;
+            break;
+        }
+    }
+    
+    builder.setSingleChoiceItems(tagNames, selectedIndex, (dialog, which) -> {
+        Tag selectedTag = tags.get(which);
+        mCurrentFilterTagId = selectedTag.getId();
+        
+        // 重新加载笔记列表
+        refreshNoteList();
+        
+        // 更新标题显示当前筛选条件
+        if (mCurrentFilterTagId == -1) {
+            setTitle(getString(R.string.all_notes));
+        } else {
+            setTitle(getString(R.string.tag_filter_prefix) + selectedTag.getName());
+        }
+        
+        dialog.dismiss();
+    });
+    
+    builder.setNegativeButton(R.string.cancel, null);
+    builder.show();
+}
 ```
-
+核心筛选方法refreshNoteList()
 ```java
+private void refreshNoteList() {
+    String selection = null;
+    String[] selectionArgs = null;
 
+    // 根据当前筛选的标签ID构建查询条件
+    if (mCurrentFilterTagId != -1) {
+        selection = NotePad.Notes.COLUMN_NAME_TAG_ID + " = ?";
+        selectionArgs = new String[]{String.valueOf(mCurrentFilterTagId)};
+    }
+
+    // 执行查询
+    Cursor cursor = getContentResolver().query(
+            getIntent().getData(),
+            PROJECTION,
+            selection,    // 筛选条件
+            selectionArgs,
+            NotePad.Notes.DEFAULT_SORT_ORDER
+    );
+
+    mAdapter.changeCursor(cursor);
+}
 ```
-
+当mCurrentFilterTagId = -1时查询时不添加筛选条件，显示所有笔记；当mCurrentFilterTagId = 0时查询tag_id = 0的标签，标题显示"标签筛选：无标签"；当mCurrentFilterTagId = 具体的标签ID，标题显示"标签筛选：标签名称"。
+在 performSearch() 方法中，实现了搜索会考虑当前标签筛选状态
 ```java
+private void performSearch(String query) {
+    String selection;
+    String[] selectionArgs;
 
+    // 如果当前有标签筛选，将标签条件和搜索条件合并
+    if (mCurrentFilterTagId != -1) {
+        selection = "(" + NotePad.Notes.COLUMN_NAME_TITLE + " LIKE ? OR " +
+                NotePad.Notes.COLUMN_NAME_NOTE + " LIKE ?) AND " +
+                NotePad.Notes.COLUMN_NAME_TAG_ID + " = ?";
+        selectionArgs = new String[]{"%" + query + "%", "%" + query + "%",
+                String.valueOf(mCurrentFilterTagId)};
+    } else {
+        selection = NotePad.Notes.COLUMN_NAME_TITLE + " LIKE ? OR " +
+                NotePad.Notes.COLUMN_NAME_NOTE + " LIKE ?";
+        selectionArgs = new String[]{"%" + query + "%", "%" + query + "%"};
+    }
+
+    // 执行搜索查询
+    Cursor cursor = getContentResolver().query(
+            getIntent().getData(),
+            PROJECTION,
+            selection,
+            selectionArgs,
+            NotePad.Notes.DEFAULT_SORT_ORDER
+    );
+}
 ```
+标签搜索功能如下图所示，左上角显示当前筛选的标签：
+![标签搜索功能展示](运行结果截图/筛选test标签.png)
+
 
 ### 小组件功能
     应用提供了一个桌面小组件，可以显示笔记的总数和最新笔记的内容。点击小组件可以快速打开应用主界面或创建新笔记。
